@@ -1,16 +1,18 @@
 import React, { useContext, useReducer } from "react";
+// import { BIconBook } from "bootstrap-vue";
 
 const initialState = {
   savedGames: [],
   currentGame: [],
-  userData: [],
+  userData: {},
   userFriends: [],
   searchFriendArr: [],
   newFriendArr: [],
   clickedFriendArr: [],
   userProfileFriends: [],
   userProfileGames: [],
-  externalLinks: []
+  externalLinks: [],
+  gameCategories: []
 };
 
 // Think of this as our main Context API that 
@@ -23,14 +25,24 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_GAME":
       return {
-          ...state,
-          savedGames: [...state.savedGames]
+        ...state,
+        savedGames: [...state.savedGames]
       }
     case "ADD_USERDATA":
       return {
         ...state,
         userData: action.data
       }
+    case 'UPDATE_FIRSTTIME_LOGIN':
+      return {
+        ...state,
+        userData: {...state.userData, firstTimeLogin: action.data}
+      }
+      case 'LOGOUT':
+        return {
+          ...state,
+          userData: {}
+        }
     case "GET_USER_GAMES":
       return {
         ...state,
@@ -46,7 +58,7 @@ const reducer = (state, action) => {
         ...state,
         searchFriendArr: action.searchFriend
       }
-    case "ADD_FRIEND": 
+    case "ADD_FRIEND":
       return {
         ...state,
         newFriendArr: action.newFriend
@@ -70,6 +82,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         externalLinks: [action.links]
+      }
+    case 'SEARCH_SAVED_GAMES': 
+      return {
+        ...state,
+        gameCategories: action.games
       }
   
     default:

@@ -30,6 +30,7 @@ router.get("/logout", (req, res) => {
   console.log("logging user out on server");
   req.logout();
   res.clearCookie("logged_in");
+  res.clearCookie("first_log");
   res.redirect(routeHelper());
 })
 
@@ -38,17 +39,24 @@ router.get("/google", passport.authenticate("google", {
   scope: ["profile", "email"]
 }));
 
-// // callback route for google to redirect to 
-// router.get("/google/redirect", passport.authenticate("google", {session: false}), (req, res) => {
-//   // location.replace("http://localhost:3000/home");
-//   res.redirect("/home")
-// })
-router.get("/google/redirect", passport.authenticate("google", {
-  failureRedirect: "/auth/login/failed"
-  }),function(req, res) {
+// <<<<<<< pushToHeroku
+// // // callback route for google to redirect to 
+// // router.get("/google/redirect", passport.authenticate("google", {session: false}), (req, res) => {
+// //   // location.replace("http://localhost:3000/home");
+// //   res.redirect("/home")
+// // })
+// router.get("/google/redirect", passport.authenticate("google", {
+//   failureRedirect: "/auth/login/failed"
+// }), function (req, res) {
+//   // Succesful authentication!
+//   res.cookie('logged_in', true);
+//   res.redirect(routeHelper() + "/home");
+// }
+// =======
+router.get("/google/redirect", passport.authenticate("google", {failureRedirect: "/auth/login/failed"}),function(req, res) {
     // Succesful authentication!
     res.cookie('logged_in', true);
-    res.redirect(routeHelper() + "/home");
+    res.redirect(routeHelper());
   }
 )
 

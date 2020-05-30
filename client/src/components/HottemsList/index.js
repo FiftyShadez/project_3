@@ -12,6 +12,7 @@ import Container from '@material-ui/core/Container';
 import API from '../../utils/index.js';
 import { useStoreContext } from '../../utils/GlobalState'
 import './hotitems.css';
+import {useHistory} from "react-router-dom";
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -52,12 +53,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function HotItemsList(props) {
-  const [globalState, ] = useStoreContext();
+  const [globalState, dispatch] = useStoreContext();
   const classes = useStyles();
   const [hotGames, setHotGames] = useState([])
 
+  const history = useHistory();
   const handleClick = (e) => {
     console.log("The link was clicked");
+    e.preventDefault();
+    API.updateFirstTimeLogin().then(function() {
+      dispatch({type: "UPDATE_FIRSTTIME_LOGIN", data: false});
+      history.push("/home");
+    });
   };
 
   useEffect(() => {
@@ -83,9 +90,9 @@ export default function HotItemsList(props) {
 
   const saveGameFunction = async (id) => {
     const game = await axios.get(`/api/gameById/` + id);
-    console.log(globalState, "GlobalState")
+/*     console.log(globalState, "GlobalState")
     console.log(game.data, "game.data")
-    console.log(globalState.userData.id, "userData")
+    console.log(globalState.userData.id, "userData") */
     game.data.UserId = globalState.userData.id;
     console.log("HERE!: ",globalState.userData.id)
     API.saveGame({ ...game.data })
